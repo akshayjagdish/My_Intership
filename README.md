@@ -1,16 +1,46 @@
-# React + Vite
+# Microservices Social Media Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A distributed social media platform scaffold built with Spring Cloud, React, RabbitMQ, Docker, centralized logging, tracing, service discovery, gateway routing, and resilience patterns.
 
-Currently, two official plugins are available:
+## Services
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `config-server` - distributed configuration server
+- `discovery-server` - Eureka service discovery
+- `api-gateway` - Spring Cloud Gateway entry point
+- `user-service` - user profiles
+- `post-service` - posts and feed
+- `media-service` - media metadata and upload URL simulation
+- `notification-service` - RabbitMQ event consumer and notification API
+- `chat-service` - REST + WebSocket chat
+- `frontend` - React UI
 
-## React Compiler
+## Run
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```powershell
+docker compose up --build
+```
 
-## Expanding the ESLint configuration
+Then open:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Frontend: http://localhost:5173
+- API Gateway: http://localhost:8080
+- Eureka: http://localhost:8761
+- RabbitMQ UI: http://localhost:15672 (`guest` / `guest`)
+- Zipkin: http://localhost:9411
+- Grafana: http://localhost:3000 (`admin` / `admin`)
+
+## Gateway Routes
+
+- `/api/users/**` -> user service
+- `/api/posts/**` -> post service
+- `/api/media/**` -> media service
+- `/api/notifications/**` -> notification service
+- `/api/chat/**` and `/ws/**` -> chat service
+
+## Build Locally
+
+```powershell
+mvn clean package
+```
+
+The services use in-memory stores so the system can start without external databases. Replace repositories with PostgreSQL/MongoDB adapters when moving beyond the learning/demo phase.

@@ -1,0 +1,94 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  zipkin:
+    image: openzipkin/zipkin:3
+    ports:
+      - "9411:9411"
+
+  loki:
+    image: grafana/loki:3.2.0
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning
+
+  promtail:
+    image: grafana/promtail:3.2.0
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./observability/promtail.yml:/etc/promtail/config.yml
+
+  config-server:
+    build: ./config-server
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  discovery-server:
+    build: ./discovery-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discovery-server
+
+  user-service:
+    build: ./user-service
+    depends_on:
+      - discovery-server
+      - rabbitmq
+
+  post-service:
+    build: ./post-service
+    depends_on:
+      - discovery-server
+      - rabbitmq
+
+  media-service:
+    build: ./media-service
+    depends_on:
+      - discovery-server
+
+  notification-service:
+    build: ./notification-service
+    depends_on:
+      - discovery-server
+      - rabbitmq
+
+  chat-service:
+    build: ./chat-service
+    depends_on:
+      - discovery-server
+      - rabbitmq
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - api-gateway
