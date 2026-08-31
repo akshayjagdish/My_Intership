@@ -1,0 +1,26 @@
+const now = "2026-08-21T00:00:00.000Z";
+
+const seedData = {
+  employees: [
+    { id: "emp-100", name: "Asha Mehta", department: "Operations", title: "Operations Lead", salary: 92000, status: "active", updatedAt: now },
+    { id: "emp-101", name: "Rohan Singh", department: "Finance", title: "Controller", salary: 105000, status: "active", updatedAt: now },
+    { id: "emp-102", name: "Mira Das", department: "Sales", title: "Account Executive", salary: 78000, status: "active", updatedAt: now }
+  ],
+  inventoryItems: [
+    { id: "sku-100", sku: "LAPTOP-PRO-14", name: "Pro Laptop 14", quantity: 42, reorderPoint: 12, unitCost: 980, updatedAt: now },
+    { id: "sku-101", sku: "DOCK-USB-C", name: "USB-C Dock", quantity: 8, reorderPoint: 15, unitCost: 120, updatedAt: now },
+    { id: "sku-102", sku: "MONITOR-27", name: "27 Inch Monitor", quantity: 31, reorderPoint: 10, unitCost: 210, updatedAt: now }
+  ],
+  ledgerEntries: [
+    { id: "led-100", account: "Revenue", type: "credit", amount: 125000, period: "2026-08", updatedAt: now },
+    { id: "led-101", account: "COGS", type: "debit", amount: 52000, period: "2026-08", updatedAt: now },
+    { id: "led-102", account: "Payroll", type: "debit", amount: 68000, period: "2026-08", updatedAt: now }
+  ],
+  salesOrders: [
+    { id: "so-100", customer: "Northwind Labs", status: "confirmed", total: 24800, itemIds: ["sku-100", "sku-101"], updatedAt: now },
+    { id: "so-101", customer: "Contoso Retail", status: "draft", total: 8700, itemIds: ["sku-102"], updatedAt: now }
+  ],
+  auditEvents: []
+};
+
+module.exports = { seedData };

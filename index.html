@@ -1,12 +1,40 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./app";
-import "./style.css";
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enterprise ERP</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>Enterprise ERP</h1>
+        <p>Operations cockpit for HR, inventory, accounting, sales, and reporting.</p>
+      </div>
+      <button id="refresh" type="button">Refresh</button>
+    </header>
+    <main>
+      <section class="metrics" id="metrics"></section>
+      <section class="grid">
+        <article>
+          <h2>HR</h2>
+          <ul id="employees"></ul>
+        </article>
+        <article>
+          <h2>Inventory</h2>
+          <ul id="inventory"></ul>
+        </article>
+        <article>
+          <h2>Sales</h2>
+          <ul id="sales"></ul>
+        </article>
+        <article>
+          <h2>Accounting</h2>
+          <pre id="ledger"></pre>
+        </article>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
