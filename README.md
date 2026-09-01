@@ -1,46 +1,43 @@
-# Microservices Social Media Platform
+# Enterprise ERP
 
-A distributed social media platform scaffold built with Spring Cloud, React, RabbitMQ, Docker, centralized logging, tracing, service discovery, gateway routing, and resilience patterns.
+A production-oriented ERP starter with five business modules:
 
-## Services
+- HR management
+- Inventory control
+- Accounting
+- Sales
+- Reporting and analytics
 
-- `config-server` - distributed configuration server
-- `discovery-server` - Eureka service discovery
-- `api-gateway` - Spring Cloud Gateway entry point
-- `user-service` - user profiles
-- `post-service` - posts and feed
-- `media-service` - media metadata and upload URL simulation
-- `notification-service` - RabbitMQ event consumer and notification API
-- `chat-service` - REST + WebSocket chat
-- `frontend` - React UI
+The implementation is intentionally dependency-light and runs on the Node.js standard library. It demonstrates enterprise patterns without requiring package installation: modular services, repositories, RBAC, audit logging, request correlation, validation, caching, metrics, database indexes, CI/CD, Docker, and deployment documentation.
 
-## Run
+## Quick Start
 
 ```powershell
-docker compose up --build
+npm test
+npm run seed
+npm start
 ```
 
-Then open:
+Open `http://localhost:3000` for the dashboard.
 
-- Frontend: http://localhost:5173
-- API Gateway: http://localhost:8080
-- Eureka: http://localhost:8761
-- RabbitMQ UI: http://localhost:15672 (`guest` / `guest`)
-- Zipkin: http://localhost:9411
-- Grafana: http://localhost:3000 (`admin` / `admin`)
+Use this demo bearer token:
 
-## Gateway Routes
+```text
+Bearer demo-admin-token
+```
 
-- `/api/users/**` -> user service
-- `/api/posts/**` -> post service
-- `/api/media/**` -> media service
-- `/api/notifications/**` -> notification service
-- `/api/chat/**` and `/ws/**` -> chat service
-
-## Build Locally
+## API Examples
 
 ```powershell
-mvn clean package
+Invoke-RestMethod http://localhost:3000/api/hr/employees -Headers @{ Authorization = "Bearer demo-admin-token" }
+Invoke-RestMethod http://localhost:3000/api/reporting/executive-summary -Headers @{ Authorization = "Bearer demo-admin-token" }
+Invoke-RestMethod http://localhost:3000/metrics
 ```
 
-The services use in-memory stores so the system can start without external databases. Replace repositories with PostgreSQL/MongoDB adapters when moving beyond the learning/demo phase.
+## Architecture
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the module map, request flow, persistence model, and production extension points.
+
+## Operations
+
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md), [docs/SECURITY.md](docs/SECURITY.md), and [docs/RUNBOOK.md](docs/RUNBOOK.md).
