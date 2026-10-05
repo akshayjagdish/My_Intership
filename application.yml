@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: reactive-analytics-dashboard
+  main:
+    web-application-type: reactive
+
+server:
+  port: 8080
+
+analytics:
+  elasticsearch-url: ${ELASTICSEARCH_URL:http://localhost:9200}
+  external-api-url: ${EXTERNAL_API_URL:https://api.example.com}
+  alert-conversion-floor: ${ALERT_CONVERSION_FLOOR:0.035}
+  alert-latency-ceiling-ms: ${ALERT_LATENCY_CEILING_MS:900}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
