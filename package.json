@@ -1,19 +1,13 @@
 {
-  "name": "enterprise-erp",
-  "version": "1.0.0",
-  "description": "Modular ERP platform with HR, inventory, accounting, sales, reporting, security, monitoring, and CI/CD scaffolding.",
-  "main": "src/server.js",
-  "type": "commonjs",
+  "name": "analytics-ingestion-function",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "node src/server.js",
-    "test": "node --test",
-    "lint": "node scripts/lint.js",
-    "seed": "node scripts/seed.js",
-    "smoke": "node scripts/smoke.js"
+    "dev": "node handler.js"
   },
-  "engines": {
-    "node": ">=18"
-  },
-  "license": "MIT"
+  "dependencies": {
+    "@aws-sdk/client-eventbridge": "^3.662.0",
+    "@aws-sdk/client-lambda": "^3.662.0"
+  }
 }

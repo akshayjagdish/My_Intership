@@ -1,43 +1,47 @@
-# Enterprise ERP
+# Realtime Analytics Dashboard
 
-A production-oriented ERP starter with five business modules:
-
-- HR management
-- Inventory control
-- Accounting
-- Sales
-- Reporting and analytics
-
-The implementation is intentionally dependency-light and runs on the Node.js standard library. It demonstrates enterprise patterns without requiring package installation: modular services, repositories, RBAC, audit logging, request correlation, validation, caching, metrics, database indexes, CI/CD, Docker, and deployment documentation.
-
-## Quick Start
-
-```powershell
-npm test
-npm run seed
-npm start
-```
-
-Open `http://localhost:3000` for the dashboard.
-
-Use this demo bearer token:
-
-```text
-Bearer demo-admin-token
-```
-
-## API Examples
-
-```powershell
-Invoke-RestMethod http://localhost:3000/api/hr/employees -Headers @{ Authorization = "Bearer demo-admin-token" }
-Invoke-RestMethod http://localhost:3000/api/reporting/executive-summary -Headers @{ Authorization = "Bearer demo-admin-token" }
-Invoke-RestMethod http://localhost:3000/metrics
-```
+Cutting-edge analytics dashboard reference implementation for monitoring business metrics and user behavior across a reactive backend, mobile app, search, serverless processing, and observability stack.
 
 ## Architecture
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the module map, request flow, persistence model, and production extension points.
+- `backend/`: Spring Boot WebFlux service with reactive APIs, SSE, WebSocket streaming, alerting, search feed, and prediction endpoints.
+- `mobile/`: Expo React Native dashboard with live SSE metrics, charts, KPIs, and alerts.
+- `serverless/ingestion/`: AWS Lambda-style function that normalizes, enriches, scores, and emits behavior events.
+- `infra/`: Docker Compose services for PostgreSQL, MongoDB, Elasticsearch, Prometheus, and Grafana.
+- `docs/`: implementation guide and operating notes.
 
-## Operations
+## Quick Start
 
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md), [docs/SECURITY.md](docs/SECURITY.md), and [docs/RUNBOOK.md](docs/RUNBOOK.md).
+1. Start platform services:
+
+   ```bash
+   docker compose -f infra/docker-compose.yml up -d
+   ```
+
+2. Run the reactive backend:
+
+   ```bash
+   cd backend
+   mvn spring-boot:run
+   ```
+
+3. Run the mobile app:
+
+   ```bash
+   cd mobile
+   npm install
+   EXPO_PUBLIC_API_BASE_URL=http://localhost:8080 npm start
+   ```
+
+## Key Endpoints
+
+- `GET /api/metrics/stream`: server-sent events for live KPI snapshots.
+- `GET /ws/metrics`: WebSocket stream for live KPI snapshots.
+- `GET /api/data-sources/health`: SQL, NoSQL, and external API integration status.
+- `GET /api/events/stream`: server-sent user behavior stream.
+- `POST /api/events`: reactive ingestion endpoint accepting a stream of events.
+- `GET /api/search?q=checkout`: Elasticsearch-ready search API.
+- `GET /api/search/index-feed`: live event-to-document indexing feed.
+- `GET /api/alerts/stream`: live alert notifications.
+- `GET /api/predictions/current`: current ML-style prediction output.
+- `GET /actuator/prometheus`: metrics for Prometheus and Grafana.

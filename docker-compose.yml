@@ -1,18 +1,42 @@
 services:
-  erp:
-    build: .
-    ports:
-      - "3000:3000"
+  postgres:
+    image: postgres:16
     environment:
-      NODE_ENV: production
-      ERP_JWT_SECRET: ${ERP_JWT_SECRET:-change-me}
-      ERP_DATA_FILE: /app/data/erp-db.json
-      ERP_AUDIT_FILE: /app/logs/audit.log
-    volumes:
-      - erp-data:/app/data
-      - erp-logs:/app/logs
-    restart: unless-stopped
+      POSTGRES_USER: analytics
+      POSTGRES_PASSWORD: analytics
+      POSTGRES_DB: analytics
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U analytics"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-volumes:
-  erp-data:
-  erp-logs:
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.2
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: analytics
