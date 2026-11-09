@@ -1,47 +1,32 @@
-# Realtime Analytics Dashboard
+# Launchpad — Career OS
 
-Cutting-edge analytics dashboard reference implementation for monitoring business metrics and user behavior across a reactive backend, mobile app, search, serverless processing, and observability stack.
+Launchpad is a portfolio-grade career launch workspace: a six-month roadmap, skill progression, project milestones, and career preparation in one product. The repository includes a responsive Next.js interface, a PostgreSQL/Prisma data foundation, API health endpoint, containerized local stack, CI/security workflows, and an AWS ECS infrastructure starting point.
 
-## Architecture
+## Run locally
 
-- `backend/`: Spring Boot WebFlux service with reactive APIs, SSE, WebSocket streaming, alerting, search feed, and prediction endpoints.
-- `mobile/`: Expo React Native dashboard with live SSE metrics, charts, KPIs, and alerts.
-- `serverless/ingestion/`: AWS Lambda-style function that normalizes, enriches, scores, and emits behavior events.
-- `infra/`: Docker Compose services for PostgreSQL, MongoDB, Elasticsearch, Prometheus, and Grafana.
-- `docs/`: implementation guide and operating notes.
+Requirements: Node.js 22+, npm, and Docker Desktop (for PostgreSQL).
 
-## Quick Start
+```powershell
+Copy-Item .env.example .env
+docker compose up --build
+```
 
-1. Start platform services:
+Open `http://localhost:3000`. The Compose database is initialized automatically. The health endpoint is `http://localhost:3000/api/health`.
 
-   ```bash
-   docker compose -f infra/docker-compose.yml up -d
-   ```
+For local Next.js development, start Postgres with `docker compose up -d db`, run `npm install`, `npx prisma generate`, `npx prisma migrate dev --name init`, then `npm run dev`.
 
-2. Run the reactive backend:
+## Product and architecture
 
-   ```bash
-   cd backend
-   mvn spring-boot:run
-   ```
+See [docs/architecture.md](docs/architecture.md) for system boundaries, data flows, and scale plan. [docs/roadmap.md](docs/roadmap.md) holds the six-month delivery plan. Operational practices are in [docs/security.md](docs/security.md), [docs/runbook.md](docs/runbook.md), and [docs/observability.md](docs/observability.md).
 
-3. Run the mobile app:
+## Important implementation boundary
 
-   ```bash
-   cd mobile
-   npm install
-   EXPO_PUBLIC_API_BASE_URL=http://localhost:8080 npm start
-   ```
+The dashboard is currently a polished prototype with representative progress data. Prisma models and health infrastructure are real. Goal reads and writes deliberately return `401` until a trusted authentication/session provider is integrated and every query is scoped to the authenticated user. Do not expose user data or deploy as a multi-user product before auth, authorization, CSRF/session policy, migrations, backups, and the production infrastructure review are complete. The Terraform directory is a reviewed starting point, not an apply-ready full cloud environment.
 
-## Key Endpoints
+## Delivery
 
-- `GET /api/metrics/stream`: server-sent events for live KPI snapshots.
-- `GET /ws/metrics`: WebSocket stream for live KPI snapshots.
-- `GET /api/data-sources/health`: SQL, NoSQL, and external API integration status.
-- `GET /api/events/stream`: server-sent user behavior stream.
-- `POST /api/events`: reactive ingestion endpoint accepting a stream of events.
-- `GET /api/search?q=checkout`: Elasticsearch-ready search API.
-- `GET /api/search/index-feed`: live event-to-document indexing feed.
-- `GET /api/alerts/stream`: live alert notifications.
-- `GET /api/predictions/current`: current ML-style prediction output.
-- `GET /actuator/prometheus`: metrics for Prometheus and Grafana.
+Pull requests run type checking, production build, container build, CodeQL, and dependency audit. Deployment is intentionally not automatic until cloud identity federation, environment secrets, ECR, reviewed infrastructure, and production approval controls are configured.
+
+## Career package
+
+See [docs/portfolio.md](docs/portfolio.md), [docs/interview-prep.md](docs/interview-prep.md), and [docs/networking.md](docs/networking.md) for evidence-based portfolio and career launch materials. Replace all sample language and metrics with work you can demonstrate.

@@ -1,6 +1,7 @@
-target
 node_modules
+.next
 .git
-.idea
-.vscode
-dist
+.env*
+!.env.example
+coverage
+terraform/.terraform
